@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Colorization</title>
+
+    <!-- Connect CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h1>🎨 Image Colorization</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="file" name="image" required>
+        <br>
+        <button type="submit">Upload & Colorize</button>
+    </form>
+
+    {% if original and output %}
+    <div class="container">
+        <div>
+            <h2>Original</h2>
+            <img src="{{ original }}" width="300">
+        </div>
+
+        <div>
+            <h2>Colorized</h2>
+            <img src="{{ output }}" width="300">
+
+            <!-- 🔥 DOWNLOAD BUTTON -->
+            <br><br>
+            <a href="{{ output }}" download="colorized_image.jpg">
+                <button class="download-btn">Download Image</button>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Connect JS -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
