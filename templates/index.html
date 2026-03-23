@@ -12,28 +12,33 @@
     <h1>🎨 Image Colorization</h1>
 
     <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="image" required>
+        <label class="file-label">
+            Choose Image
+            <input type="file" name="image" required>
+        </label>
         <br>
         <button type="submit">Upload & Colorize</button>
     </form>
 
     {% if original and output %}
     <div class="container">
-        <div>
+        
+        <div class="card">
             <h2>Original</h2>
             <img src="{{ original }}" width="300">
         </div>
 
-        <div>
+        <div class="card">
             <h2>Colorized</h2>
             <img src="{{ output }}" width="300">
 
             <!-- 🔥 DOWNLOAD BUTTON -->
             <br><br>
-            <a href="{{ output }}" download="colorized_image.jpg">
-                <button class="download-btn">Download Image</button>
+            <a href="{{ output }}" download>
+                <button class="download-btn">⬇ Download Image</button>
             </a>
         </div>
+
     </div>
     {% endif %}
 
