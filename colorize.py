@@ -3,6 +3,7 @@ import os
 import torch
 import numpy as np
 from PIL import Image
+import uuid  # ✅ for unique filenames
 
 from colorizers import eccv16
 from colorizers.util import load_img, preprocess_img, postprocess_tens
@@ -12,6 +13,9 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+# ✅ Ensure upload folder exists (VERY IMPORTANT)
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 # Load model
 colorizer = eccv16(pretrained=True).eval()
 
@@ -20,8 +24,11 @@ def index():
     if request.method == 'POST':
         file = request.files['image']
 
+        # ✅ Generate unique filename (fix overwrite issue)
+        unique_name = str(uuid.uuid4()) + "_" + file.filename
+
         # Save input
-        input_path = os.path.join(UPLOAD_FOLDER, file.filename)
+        input_path = os.path.join(UPLOAD_FOLDER, unique_name)
         file.save(input_path)
 
         # Load image
@@ -37,11 +44,9 @@ def index():
         # Postprocess
         out_img = postprocess_tens(tens_l_orig, out_ab)
 
-        # 🔥 SAVE IMAGE MANUALLY (fix)
-        output_path = os.path.join(
-            UPLOAD_FOLDER,
-            "colorized_" + file.filename
-        )
+        # Save output
+        output_filename = "colorized_" + unique_name
+        output_path = os.path.join(UPLOAD_FOLDER, output_filename)
 
         out_img = (out_img * 255).astype(np.uint8)
         Image.fromarray(out_img).save(output_path)
